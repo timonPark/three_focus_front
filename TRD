@@ -1,0 +1,213 @@
+# Frontend Technical Requirements Document
+
+## 1. Overview
+
+- 프로젝트명: ThreeFocus
+- 설명: 오늘의 할 일 중 가장 중요한 3가지를 선택하고, 24시간 시간표에 배치하여 시각화하는 생산성 웹 앱
+- 대상 플랫폼: 웹 (PC / 모바일 반응형)
+
+## 2. Tech Stack
+
+| 항목 | 기술 | 선택 이유 |
+|---|---|---|
+| 런타임 | Node.js v22 | LTS 버전, 최신 성능 및 안정성 |
+| 패키지 매니저 | pnpm | 빠른 설치, 디스크 효율적인 의존성 관리 |
+| 프레임워크 | Next.js (App Router) | SSR/SSG 지원, 파일 기반 라우팅 |
+| 언어 | TypeScript | 타입 안정성, 유지보수성 |
+| 스타일링 | Tailwind CSS | 빠른 UI 개발, 반응형 처리 용이 |
+| 상태관리 | Zustand | 가볍고 단순한 전역 상태 관리 |
+| 서버 통신 | Axios + React Query | API 호출, 캐싱, 로딩/에러 상태 자동 관리 |
+| 폼 관리 | React Hook Form + Zod | 유효성 검사와 폼 상태를 효율적으로 처리 |
+| 소셜 로그인 | NextAuth.js | Google OAuth 연동 간편화 |
+
+## 3. Architecture
+
+- Next.js App Router 기반의 클라이언트-서버 혼합 구조
+- 페이지 단위로 서버 컴포넌트(Server Component)와 클라이언트 컴포넌트(Client Component)를 구분하여 사용
+- 인증이 필요한 페이지는 미들웨어(middleware.ts)에서 접근 제어
+
+```
+Browser
+  ↓ HTTP 요청
+Next.js 서버 (App Router)
+  ↓ API 호출
+백엔드 서버 (three_focus_server)
+  ↓
+DB
+```
+
+## 4. Folder Structure
+
+```
+three_focus_front/
+├── app/                      # Next.js App Router 페이지
+│   ├── (auth)/               # 인증 관련 페이지 그룹
+│   │   ├── login/
+│   │   └── signup/
+│   ├── (main)/               # 로그인 후 페이지 그룹
+│   │   ├── home/
+│   │   ├── top3/
+│   │   ├── schedule/
+│   │   └── share/
+│   └── layout.tsx
+├── components/               # 재사용 UI 컴포넌트
+│   ├── common/               # 버튼, 인풋, 모달 등 공통 컴포넌트
+│   └── feature/              # 기능별 컴포넌트 (TodoItem, TimeSlot 등)
+├── hooks/                    # 커스텀 훅
+├── stores/                   # Zustand 전역 상태
+├── services/                 # API 호출 함수
+├── types/                    # TypeScript 타입 정의
+├── lib/                      # 유틸리티, 상수, 설정
+├── middleware.ts              # 인증 접근 제어
+└── public/                   # 정적 파일 (이미지, 아이콘)
+```
+
+## 5. Routing Strategy
+
+| 경로 | 페이지 | 인증 필요 |
+|---|---|---|
+| `/login` | 로그인 화면 | 없음 |
+| `/signup` | 회원가입 화면 | 없음 |
+| `/home` | 홈 (오늘 할 일) | 필요 |
+| `/top3` | 중요한 3가지 선택 | 필요 |
+| `/schedule` | 시간 배치 화면 | 필요 |
+| `/visualization` | 일정 시각화 화면 | 필요 |
+| `/share` | 일정 공유 화면 | 필요 |
+
+- 미인증 사용자가 인증 필요 경로에 접근하면 `/login`으로 리디렉션
+- 이미 로그인한 사용자가 `/login`, `/signup`에 접근하면 `/home`으로 리디렉션
+
+## 6. State Management
+
+- 전역 상태는 Zustand로 관리
+- 서버에서 받아오는 데이터(할 일 목록 등)는 React Query로 관리
+- 로컬 UI 상태(모달 열림 여부 등)는 컴포넌트 내부 useState로 관리
+
+| 상태 | 관리 방법 |
+|---|---|
+| 로그인 사용자 정보 | Zustand |
+| 오늘의 할 일 목록 | React Query |
+| 선택된 Top 3 | Zustand |
+| 시간 배치 데이터 | React Query |
+| 모달/드로어 열림 여부 | 컴포넌트 로컬 상태 |
+
+## 7. API Communication
+
+- 기본 URL은 환경변수로 관리 (`NEXT_PUBLIC_API_URL`)
+- Axios 인스턴스를 생성하여 공통 헤더(Authorization 토큰) 자동 삽입
+- 요청/응답 인터셉터로 토큰 만료 시 자동 갱신 처리
+- React Query로 데이터 캐싱 및 자동 재요청 처리
+
+```
+services/
+├── api.ts         # Axios 인스턴스 및 인터셉터 설정
+├── auth.ts        # 로그인, 회원가입, 로그아웃 API
+├── todo.ts        # 할 일 CRUD API
+└── schedule.ts    # 시간 배치, 시각화 API
+```
+
+## 8. Authentication
+
+- 일반 로그인: 이메일 + 비밀번호 → 서버에서 JWT 발급
+- 소셜 로그인: NextAuth.js를 통한 Google OAuth 연동
+- 토큰 저장: HttpOnly Cookie (XSS 방어)
+- 인증 상태 유지: middleware.ts에서 쿠키 기반으로 접근 제어
+
+소셜 로그인 신규 가입 시 추가 처리:
+- 서버에서 신규 사용자 감지 시 프론트로 `isNewUser: true` 응답
+- 약관 동의 화면 → 추가 정보 입력 화면 순서로 이동
+
+약관 동의 저장 구조:
+- 약관별 개별 동의 여부를 서버에 전송
+- 항목: `TERMS_OF_SERVICE`, `PRIVACY_POLICY`, `MARKETING`
+
+## 9. Design System
+
+- Tailwind CSS 기반으로 공통 색상, 폰트, 간격을 `tailwind.config.ts`에 정의
+- 공통 컴포넌트 목록
+
+| 컴포넌트 | 설명 |
+|---|---|
+| Button | 기본/비활성화/로딩 상태 지원 |
+| Input | 텍스트, 이메일, 비밀번호 타입 지원 |
+| Checkbox | 약관 동의 등에 사용 |
+| Modal | 공통 모달 레이아웃 |
+| TodoItem | 할 일 항목 카드 |
+| TimeSlot | 24시간 타임라인 슬롯 |
+
+## 10. Error Handling
+
+- API 에러는 React Query의 `onError` 콜백에서 공통 처리
+- HTTP 상태 코드별 처리
+
+| 상태 코드 | 처리 방식 |
+|---|---|
+| 400 | 폼 유효성 에러 메시지 표시 |
+| 401 | 로그인 페이지로 리디렉션 |
+| 403 | 접근 불가 안내 |
+| 500 | 공통 에러 토스트 메시지 표시 |
+
+- 전역 에러 바운더리(Error Boundary)를 설정하여 예상치 못한 에러 처리
+
+## 11. Logging
+
+- 개발 환경: 브라우저 콘솔 로그
+- 운영 환경: 에러 발생 시 외부 로깅 서비스 연동 (예: Sentry)
+- 로깅 대상: API 에러, 인증 실패, 예상치 못한 런타임 에러
+
+## 12. Environment Variables
+
+```
+# .env.local
+NEXT_PUBLIC_API_URL=http://localhost:8080   # 백엔드 API 주소
+NEXTAUTH_SECRET=                            # NextAuth 암호화 키
+NEXTAUTH_URL=http://localhost:3000          # 앱 기본 URL
+GOOGLE_CLIENT_ID=                          # 구글 OAuth 클라이언트 ID
+GOOGLE_CLIENT_SECRET=                      # 구글 OAuth 시크릿
+```
+
+- `NEXT_PUBLIC_` 접두사가 붙은 변수만 브라우저에 노출됨
+- 시크릿 값은 서버 사이드에서만 사용
+
+## 13. Build & Deploy
+
+- Node 버전 고정: `.nvmrc`에 `22` 명시 (`nvm use`로 적용)
+- 로컬 개발: `pnpm dev` (포트 3000)
+- 빌드: `pnpm build`
+- 배포: Vercel (Next.js 공식 플랫폼, 자동 CI/CD 지원)
+- 환경 분리: 개발(dev) / 운영(production) 환경변수 분리 관리
+
+## 14. Coding Convention
+
+- 언어: TypeScript strict 모드 사용
+- 컴포넌트: 함수형 컴포넌트만 사용, 파일명은 PascalCase (예: `TodoItem.tsx`)
+- 훅: 파일명은 camelCase, `use` 접두사 (예: `useTodoList.ts`)
+- 서비스/유틸: camelCase (예: `todoService.ts`)
+- 들여쓰기: 2칸 스페이스
+- API 응답 타입은 반드시 TypeScript 타입으로 정의
+- 컴포넌트 props는 interface로 정의
+
+## 15. Performance Optimization
+
+- 이미지: Next.js `<Image>` 컴포넌트 사용 (자동 최적화)
+- 코드 분할: Next.js App Router의 자동 코드 스플리팅 활용
+- 데이터 캐싱: React Query의 캐시 전략으로 불필요한 API 재요청 방지
+- 폰트: `next/font`로 폰트 최적화 (레이아웃 시프트 방지)
+
+## 16. Accessibility
+
+- 모든 이미지에 `alt` 속성 필수 작성
+- 버튼과 인풋에 `aria-label` 제공
+- 키보드만으로 전체 서비스 이용 가능하도록 포커스 관리
+- 색상 대비율 WCAG AA 기준 준수
+
+## 17. Testing Strategy
+
+| 테스트 종류 | 도구 | 대상 |
+|---|---|---|
+| 단위 테스트 | Jest | 유틸 함수, 커스텀 훅 |
+| 컴포넌트 테스트 | React Testing Library | 공통 컴포넌트 |
+| E2E 테스트 | Playwright | 로그인, 회원가입, 할 일 추가 핵심 플로우 |
+
+- 핵심 기능(인증, 할 일 CRUD, Top3 선택)은 E2E 테스트 필수
+- 공통 컴포넌트는 컴포넌트 테스트 작성
