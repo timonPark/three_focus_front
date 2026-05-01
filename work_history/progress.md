@@ -22,73 +22,166 @@
 
 ---
 
-## 진행 예정 작업
+### 구현 플랜 수립 (2026-05-02)
 
-### 공통 기반 작업
+- [x] HTML 디자인 시안 7개 분석 (kr 버전 기준)
+- [x] 서버 API 명세서 분석 (three_focus_server README.md)
+- [x] 디자인 시스템 분석 (DESIGN.md — 컬러/타이포/스페이싱 토큰)
+- [x] HTML↔API↔Next.js 경로 매핑 완료
+- [x] Phase별 구현 순서 및 컴포넌트 목록 확정
+- [x] TypeScript 타입 전략 확정 (DTO → interface, 나머지 → type)
 
-- [ ] 환경변수 설정 (.env.local)
-- [ ] Axios 인스턴스 및 인터셉터 설정 (services/api.ts)
-- [ ] React Query Provider 설정
-- [ ] 공통 컴포넌트 개발 (components/common/)
-  - [ ] Button
-  - [ ] Input
-  - [ ] Checkbox
-  - [ ] Modal
+#### HTML → Next.js 경로 매핑
+
+| HTML 파일 | Next.js 경로 | 연동 API |
+|---|---|---|
+| `login.html` | `/login` | POST `/api/auth/login` |
+| `signup.html` | `/signup` | POST `/api/auth/sign-up` |
+| `today_focus.html` | `/home` | GET/POST/PUT/DELETE `/api/todos` |
+| `3_threefocus.html` | `/top3` | GET `/api/todos`, POST/GET `/api/top3` |
+| `time_allocation.html` | `/schedule` | PUT/GET/DELETE `/api/schedules` |
+| `daily_timeline.html` | `/visualization` | GET `/api/schedules`, GET `/api/top3` |
+| `share_your_fucus.html` | `/share` | POST/GET `/api/shares` |
 
 ---
 
-### 화면별 작업
+## 진행 예정 작업
 
-#### 1. 로그인 화면 (`/login`)
-- [ ] 타입 정의 (types/auth.ts)
-- [ ] API 서비스 작성 (services/auth.ts)
-- [ ] Zustand 인증 스토어 작성 (stores/authStore.ts)
-- [ ] 로그인 폼 UI 구현
-- [ ] 일반 로그인 (이메일 + 비밀번호) 연동
-- [ ] 구글 소셜 로그인 연동 (NextAuth.js)
+### Phase 0 — 디자인 토큰 / 기반 설정
 
-#### 2. 회원가입 화면 (`/signup`)
-- [ ] 회원가입 폼 UI 구현
-  - [ ] 이메일, 비밀번호, 이름, 휴대폰 번호, 성별, 생년월일 입력
-- [ ] Zod 유효성 검사 스키마 작성
-- [ ] 약관 동의 UI 구현
-  - [ ] 전체 동의 버튼
-  - [ ] 서비스 이용약관 (필수)
-  - [ ] 개인정보 처리방침 (필수)
-  - [ ] 마케팅 정보 수신 동의 (선택)
-  - [ ] 약관 전문 보기 모달
-- [ ] 소셜 로그인 신규 가입 플로우 구현
-  - [ ] 약관 동의 화면
-  - [ ] 추가 정보 입력 화면 (휴대폰 번호, 성별, 생년월일)
+- [ ] `tailwind.config.ts` 커스텀 토큰 추가
+  - [ ] colors: primary(#000), secondary(#006b5f), surface/on-surface 계열, error 등
+  - [ ] fontFamily: Inter
+  - [ ] spacing: timeline-slot(64px), container-padding(24px), gutter(16px) 등
+  - [ ] borderRadius: sm(0.25rem), md(0.75rem), lg(1rem), xl(1.5rem)
+- [ ] 환경변수 설정 (`.env.local`)
+- [ ] Axios 인스턴스 및 인터셉터 설정 (`services/api.ts`)
+  - [ ] baseURL, Authorization 헤더 자동 주입
+  - [ ] 401 시 refresh 토큰으로 재발급 인터셉터
+- [ ] React Query Provider 설정
 
-#### 3. 홈 화면 (`/home`)
-- [ ] 타입 정의 (types/todo.ts)
-- [ ] API 서비스 작성 (services/todo.ts)
-- [ ] 오늘 할 일 목록 조회 (React Query)
-- [ ] 할 일 추가 기능
-- [ ] 할 일 수정 기능
-- [ ] 할 일 삭제 기능
+---
 
-#### 4. Top3 선택 화면 (`/top3`)
-- [ ] 등록된 할 일 목록에서 3개 선택 UI
-- [ ] 선택 상태 Zustand로 관리
-- [ ] 선택 완료 후 시간 배치 화면으로 이동
+### Phase 1 — 공통 레이아웃 컴포넌트
 
-#### 5. 시간 배치 화면 (`/schedule`)
-- [ ] 타입 정의 (types/schedule.ts)
-- [ ] API 서비스 작성 (services/schedule.ts)
-- [ ] 24시간 타임라인 UI 구현
-- [ ] 할 일별 시간 배치 기능
-- [ ] 배치 데이터 저장 연동
+- [ ] `components/common/TopAppBar.tsx` — 로고 + 알림/설정/프로필 아이콘
+- [ ] `components/common/SideNav.tsx` — 데스크톱 좌측 네비 (lg:w-64)
+  - 메뉴: 할 일(home), 집중(top3), 타임라인(visualization), 공유(share)
+- [ ] `components/common/BottomNav.tsx` — 모바일 탭바 (lg:hidden, h-20)
+- [ ] `app/(main)/layout.tsx` — TopAppBar + SideNav + BottomNav 조합
+- [ ] 공통 UI 컴포넌트
+  - [ ] `Button.tsx`
+  - [ ] `Input.tsx` (포커스 시 border-secondary)
+  - [ ] `Checkbox.tsx`
+  - [ ] `Modal.tsx`
 
-#### 6. 일정 시각화 화면 (`/visualization`)
-- [ ] 날짜 선택 UI
-- [ ] 24시간 타임라인 시각화
-- [ ] 날짜별 일정 조회 연동
+---
 
-#### 7. 일정 공유 화면 (`/share`)
-- [ ] 링크 공유 기능
-- [ ] 이미지 공유 기능
+### Phase 2 — 인증
+
+**타입:** DTO → `interface`, UI 상태 → `type`
+
+- [ ] `types/auth.ts`
+  - `interface SignUpRequest` — name, email, password, phone?, birthDate?, gender?
+  - `interface LoginRequest` — email, password
+  - `interface AuthResponse` — accessToken, refreshToken, user
+  - `interface RefreshRequest` — refreshToken
+  - `type Gender = 'male' | 'female' | 'other'`
+- [ ] `services/authService.ts` — signUp(), login(), refresh()
+- [ ] `stores/authStore.ts` — Zustand: user, accessToken, 로그아웃
+- [ ] `components/common/PasswordInput.tsx` — 보이기/숨기기 토글
+- [ ] `components/feature/GenderRadioGroup.tsx` — peer-checked 스타일
+- [ ] `components/feature/TermsAgreement.tsx` — 전체동의 + 개별 체크박스 + 약관 모달
+- [ ] `app/(auth)/login/page.tsx`
+  - [ ] 이메일/비밀번호 폼 (React Hook Form + Zod)
+  - [ ] Google OAuth 버튼 (NextAuth)
+- [ ] `app/(auth)/signup/page.tsx`
+  - [ ] 전체 폼 (이름, 이메일, 비밀번호, 전화번호, 생년월일, 성별)
+  - [ ] 약관 동의 섹션
+  - [ ] 소셜 가입 시 추가정보 입력 플로우
+
+---
+
+### Phase 3 — 할 일 (`/home`)
+
+**타입:** 서버 응답 → `interface`, 상태값 → `type`
+
+- [ ] `types/todo.ts`
+  - `interface TodoResponse` — id, title, memo?, estimatedMinutes?, date, completed, isTop3, top3Order?
+  - `interface CreateTodoRequest` — title, memo?, estimatedMinutes?, date
+  - `interface UpdateTodoRequest` — title?, memo?, estimatedMinutes?, completed?
+  - `type TodoStatus = 'pending' | 'completed'`
+- [ ] `services/todoService.ts` — getTodos(date), createTodo(), updateTodo(), deleteTodo()
+- [ ] `hooks/useTodos.ts` — useQuery + useMutation 래핑
+- [ ] `components/feature/TodoItem.tsx` — 체크박스, 제목, 시간, edit/delete (hover 노출)
+- [ ] `components/feature/TodoList.tsx` — 진행중/완료 섹션 분리
+- [ ] `components/feature/QuickAddInput.tsx` — 인라인 빠른 추가 (Enter로 생성)
+- [ ] `app/(main)/home/page.tsx`
+  - [ ] 오늘 날짜 할 일 목록 조회
+  - [ ] "핵심 3가지 선택" 프롬프트 박스 (/top3 이동 버튼)
+
+---
+
+### Phase 4 — 핵심 3가지 선택 (`/top3`)
+
+- [ ] `types/top3.ts`
+  - `interface Top3Response` — id, todoId, date, order
+  - `interface SetTop3Request` — todoIds: number[]
+- [ ] `services/top3Service.ts` — getTop3(date), setTop3()
+- [ ] `hooks/useTop3.ts`
+- [ ] `components/feature/Top3Card.tsx` — 선택/미선택 상태, border-secondary, 별 아이콘
+- [ ] `components/feature/Top3Grid.tsx` — bento grid (grid-cols-3)
+- [ ] `components/feature/Top3ProgressBar.tsx` — "2/3 선택됨" sticky 진행상황
+- [ ] `app/(main)/top3/page.tsx`
+  - [ ] 선택된 todoId 배열 Zustand 관리
+  - [ ] 3개 선택 시 "시간 배치" 버튼 활성화 → /schedule 이동
+
+---
+
+### Phase 5 — 시간 배치 (`/schedule`)
+
+**추가 설치 필요:** `@dnd-kit/core`, `@dnd-kit/sortable`
+
+- [ ] `types/schedule.ts`
+  - `interface ScheduleResponse` — id, todoId, date, startTime, endTime
+  - `interface UpsertScheduleRequest` — todoId, date, startTime, endTime
+- [ ] `services/scheduleService.ts` — getSchedules(date), upsertSchedule(), deleteSchedule()
+- [ ] `hooks/useSchedule.ts`
+- [ ] `components/feature/DraggableTodoCard.tsx` — 좌측 패널 드래그 소스 (cursor-grab)
+- [ ] `components/feature/TimelineGrid.tsx` — 우측 시간대 그리드 (h-[64px]/시간)
+- [ ] `components/feature/TimelineSlot.tsx` — 드롭 타겟 슬롯
+- [ ] `components/feature/ScheduledBlock.tsx` — 배치된 과업 블록 (border-l-4 border-secondary)
+- [ ] `components/feature/CurrentTimeIndicator.tsx` — 빨간 현재 시간 선
+- [ ] `app/(main)/schedule/page.tsx`
+  - [ ] 좌측: 핵심 3가지 드래그 카드 + 미배치 배지
+  - [ ] 우측: 드롭 가능한 타임라인
+  - [ ] 초기화 / 하루 일정 확정 버튼
+
+---
+
+### Phase 6 — 일간 타임라인 (`/visualization`)
+
+읽기 전용 뷰 (schedule + top3 데이터 합성)
+
+- [ ] `components/feature/Top3Summary.tsx` — 좌측: 완료/진행중/예정 상태 카드 (펄스 애니메이션)
+- [ ] `components/feature/DailyStats.tsx` — 달성률 % 박스
+- [ ] `components/feature/TimelineView.tsx` — 우측: 완료(bg-secondary-fixed) / 진행중(border-secondary) / 예정 색상 구분
+- [ ] `components/feature/DatePicker.tsx` — 좌/우 화살표 날짜 네비게이션
+- [ ] `app/(main)/visualization/page.tsx`
+
+---
+
+### Phase 7 — 일정 공유 (`/share`)
+
+- [ ] `types/share.ts`
+  - `interface ShareResponse` — shareToken, shareUrl, expiresAt, todos: TodoResponse[]
+  - `interface CreateShareRequest` — includeDetails, includeStatus, isPrivate
+- [ ] `services/shareService.ts` — createShare(), getShare(token)
+- [ ] `components/feature/ShareCard.tsx` — 공유 미리보기 카드 (이미지 저장 대상)
+- [ ] `components/feature/ShareOptions.tsx` — 체크박스 3개 (과업 상세/완료상태/비공개)
+- [ ] `components/feature/ShareActions.tsx` — 링크 복사, 이미지 저장 버튼
+- [ ] `app/(main)/share/page.tsx`
+- [ ] `app/share/[token]/page.tsx` — 인증 불필요 (middleware.ts 예외 추가)
 
 ---
 
