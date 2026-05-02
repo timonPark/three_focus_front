@@ -43,7 +43,7 @@ export interface RefreshResponse {
   accessToken: string
 }
 
-export type Gender = 'male' | 'female' | 'other'
+export type Gender = 'male' | 'female'
 
 export type User = {
   id: number

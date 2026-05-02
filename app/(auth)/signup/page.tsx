@@ -21,7 +21,7 @@ const schema = z.object({
   password: z.string().min(8, '비밀번호는 8자 이상이어야 합니다'),
   phone: z.string().optional(),
   birthDate: z.string().optional(),
-  gender: z.enum(['male', 'female', 'other']).optional(),
+  gender: z.enum(['male', 'female']).optional(),
   termsService: z.boolean().refine((v) => v === true, '서비스 이용약관에 동의해주세요'),
   termsPrivacy: z.boolean().refine((v) => v === true, '개인정보 처리방침에 동의해주세요'),
   termsMarketing: z.boolean().optional(),
