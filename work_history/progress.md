@@ -82,26 +82,21 @@
 
 **타입:** DTO → `interface`, UI 상태 → `type`
 
-- [ ] `types/auth.ts`
-  - `interface SignUpRequest` — name, email, password, phone?, birthDate?, gender?
-  - `interface LoginRequest` — email, password
-  - `interface AuthResponse` — accessToken, refreshToken, user, isProfileComplete?
-  - `interface RefreshRequest` — refreshToken
-  - `interface GoogleLoginRequest` — idToken
-  - `interface CompleteProfileRequest` — phone, gender, birthday, 약관 동의
-  - `type Gender = 'male' | 'female' | 'other'`
-- [ ] `services/authService.ts` — signUp(), login(), refresh(), googleLogin(), completeProfile()
-- [ ] `stores/authStore.ts` — Zustand: user, accessToken, 로그아웃
-- [ ] `components/common/PasswordInput.tsx` — 보이기/숨기기 토글
-- [ ] `components/feature/GenderRadioGroup.tsx` — peer-checked 스타일
-- [ ] `components/feature/TermsAgreement.tsx` — 전체동의 + 개별 체크박스 + 약관 모달
-- [ ] `app/(auth)/login/page.tsx`
-  - [ ] 이메일/비밀번호 폼 (React Hook Form + Zod)
-  - [ ] Google OAuth 버튼 (NextAuth)
-- [ ] `app/(auth)/signup/page.tsx`
-  - [ ] 전체 폼 (이름, 이메일, 비밀번호, 전화번호, 생년월일, 성별)
-  - [ ] 약관 동의 섹션
-  - [ ] 소셜 가입 시 추가정보 입력 플로우
+- [x] `types/auth.ts` — LoginRequest, SignUpRequest, GoogleLoginRequest, CompleteProfileRequest, AuthResponse, RefreshRequest (interface), Gender/User (type)
+- [x] `types/next-auth.d.ts` — Session/JWT 타입 확장 (accessToken, backendUser 등)
+- [x] `services/authService.ts` — login, signUp, refresh, googleLogin, completeProfile
+- [x] `lib/actions/auth.ts` — Server Actions: setAuthCookie, clearAuthCookie (httpOnly 쿠키)
+- [x] `app/api/auth/[...nextauth]/route.ts` — Google OAuth, JWT 콜백에서 백엔드 토큰 교환
+- [x] `lib/providers.tsx` — SessionProvider 추가
+- [x] `components/common/PasswordInput.tsx` — 보이기/숨기기 토글 (Eye/EyeOff)
+- [x] `components/feature/auth/GenderRadioGroup.tsx` — peer-checked 스타일 라디오
+- [x] `components/feature/auth/TermsAgreement.tsx` — 전체동의 + 개별 체크박스 (useFormContext)
+- [x] `app/(auth)/layout.tsx` — 인증 페이지 공통 레이아웃 (중앙 정렬)
+- [x] `app/(auth)/login/page.tsx` — 이메일/비밀번호 폼 + Google OAuth 버튼
+- [x] `app/(auth)/signup/page.tsx` — 전체 폼 + 약관 동의 섹션 (React Hook Form + Zod v4)
+- [x] `app/google-callback/page.tsx` — Google 토큰 교환 후 쿠키 설정 + 리다이렉트
+- [x] `middleware.ts` → `proxy.ts` 마이그레이션 (deprecated 해소), PUBLIC_PATHS에 /google-callback, /share 추가
+- [ ] 소셜 가입 추가정보 입력 플로우 (`/complete-profile`) — isProfileComplete: false 시 사용
 
 ---
 

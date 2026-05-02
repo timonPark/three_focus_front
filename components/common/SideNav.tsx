@@ -4,6 +4,7 @@ import { CheckSquare, Crosshair, BarChart2, Share2, LogOut } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuthStore } from '@/stores/authStore'
+import { clearAuthCookie } from '@/lib/actions/auth'
 
 const NAV_ITEMS = [
   { href: '/home', label: '할 일', icon: CheckSquare },
@@ -17,8 +18,9 @@ export default function SideNav() {
   const router = useRouter()
   const clearAuth = useAuthStore((s) => s.clearAuth)
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     clearAuth()
+    await clearAuthCookie()
     router.push('/login')
   }
 
