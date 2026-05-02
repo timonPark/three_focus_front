@@ -104,19 +104,15 @@
 
 **타입:** 서버 응답 → `interface`, 상태값 → `type`
 
-- [ ] `types/todo.ts`
-  - `interface TodoResponse` — id, title, memo?, estimatedMinutes?, date, completed, isTop3, top3Order?
-  - `interface CreateTodoRequest` — title, memo?, estimatedMinutes?, date
-  - `interface UpdateTodoRequest` — title?, memo?, estimatedMinutes?, completed?
-  - `type TodoStatus = 'pending' | 'completed'`
-- [ ] `services/todoService.ts` — getTodos(date), createTodo(), updateTodo(), deleteTodo()
-- [ ] `hooks/useTodos.ts` — useQuery + useMutation 래핑
-- [ ] `components/feature/TodoItem.tsx` — 체크박스, 제목, 시간, edit/delete (hover 노출)
-- [ ] `components/feature/TodoList.tsx` — 진행중/완료 섹션 분리
-- [ ] `components/feature/QuickAddInput.tsx` — 인라인 빠른 추가 (Enter로 생성)
-- [ ] `app/(main)/home/page.tsx`
-  - [ ] 오늘 날짜 할 일 목록 조회
-  - [ ] "핵심 3가지 선택" 프롬프트 박스 (/top3 이동 버튼)
+- [x] `types/todo.ts` — TodoResponse, CreateTodoRequest, UpdateTodoRequest (interface), TodoStatus (type)
+- [x] `services/todoService.ts` — getTodos, createTodo, updateTodo, deleteTodo
+- [x] `hooks/useTodos.ts` — useTodos, useCreateTodo, useUpdateTodo, useDeleteTodo
+- [x] `lib/utils.ts` — toDateString, formatMinutes 유틸
+- [x] `stores/todoStore.ts` — quickAddValue UI 상태
+- [x] `components/feature/todo/TodoItem.tsx` — 체크박스, top3 배지, 인라인 편집, edit/delete hover
+- [x] `components/feature/todo/TodoList.tsx` — 진행중/완료 섹션 분리
+- [x] `components/feature/todo/QuickAddInput.tsx` — Enter로 할 일 추가
+- [x] `app/(main)/home/page.tsx` — 오늘 날짜 CRUD + 핵심 3가지 프롬프트 박스
 
 ---
 
