@@ -56,25 +56,25 @@
   - [x] borderRadius: sm(0.25rem), md(0.75rem), lg(1rem), xl(1.5rem)
 - [x] `app/layout.tsx` — `next/font/google`으로 Inter 폰트 적용, body에 `bg-background text-on-surface`
 - [x] 환경변수 설정 (`.env.local`) — `NEXT_PUBLIC_API_URL=http://localhost:8080` 추가
-- [ ] Axios 인스턴스 및 인터셉터 설정 (`services/api.ts`)
-  - [ ] baseURL, Authorization 헤더 자동 주입
-  - [ ] 401 시 refresh 토큰으로 재발급 인터셉터
-- [ ] React Query Provider 설정
+- [x] Axios 인스턴스 및 인터셉터 설정 (`services/api.ts`)
+  - [x] baseURL, Authorization 헤더 자동 주입
+  - [x] 401 시 refresh 토큰으로 재발급 인터셉터 (실패 시 `/login` 리다이렉트)
+- [x] React Query Provider 설정 (`lib/providers.tsx`, root layout에 래핑)
 
 ---
 
 ### Phase 1 — 공통 레이아웃 컴포넌트
 
-- [ ] `components/common/TopAppBar.tsx` — 로고 + 알림/설정/프로필 아이콘
-- [ ] `components/common/SideNav.tsx` — 데스크톱 좌측 네비 (lg:w-64)
+- [x] `components/common/TopAppBar.tsx` — 로고 + 알림/설정/프로필 아이콘
+- [x] `components/common/SideNav.tsx` — 데스크톱 좌측 네비 (lg:w-64)
   - 메뉴: 할 일(home), 집중(top3), 타임라인(visualization), 공유(share)
-- [ ] `components/common/BottomNav.tsx` — 모바일 탭바 (lg:hidden, h-20)
-- [ ] `app/(main)/layout.tsx` — TopAppBar + SideNav + BottomNav 조합
-- [ ] 공통 UI 컴포넌트
-  - [ ] `Button.tsx`
-  - [ ] `Input.tsx` (포커스 시 border-secondary)
-  - [ ] `Checkbox.tsx`
-  - [ ] `Modal.tsx`
+- [x] `components/common/BottomNav.tsx` — 모바일 탭바 (lg:hidden, h-20)
+- [x] `app/(main)/layout.tsx` — TopAppBar + SideNav + BottomNav 조합
+- [x] 공통 UI 컴포넌트
+  - [x] `Button.tsx` — variant(primary/secondary/ghost/danger), size(sm/md/lg), loading 스피너
+  - [x] `Input.tsx` — label, error 메시지, focus 시 border-secondary
+  - [x] `Checkbox.tsx` — accent-secondary
+  - [x] `Modal.tsx` — ESC 닫기, 오버레이 클릭 닫기
 
 ---
 

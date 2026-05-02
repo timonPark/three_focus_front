@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { Providers } from '@/lib/providers';
 import './globals.css';
 
 const inter = Inter({
@@ -19,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`${inter.variable} h-full`}>
-      <body className="min-h-full bg-background text-on-surface antialiased">{children}</body>
+      <body className="min-h-full bg-background text-on-surface antialiased">
+          <Providers>{children}</Providers>
+        </body>
     </html>
   );
 }
