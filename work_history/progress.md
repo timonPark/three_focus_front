@@ -49,12 +49,13 @@
 
 ### Phase 0 — 디자인 토큰 / 기반 설정
 
-- [ ] `tailwind.config.ts` 커스텀 토큰 추가
-  - [ ] colors: primary(#000), secondary(#006b5f), surface/on-surface 계열, error 등
-  - [ ] fontFamily: Inter
-  - [ ] spacing: timeline-slot(64px), container-padding(24px), gutter(16px) 등
-  - [ ] borderRadius: sm(0.25rem), md(0.75rem), lg(1rem), xl(1.5rem)
-- [ ] 환경변수 설정 (`.env.local`)
+- [x] `app/globals.css` — Tailwind v4 `@theme` 블록으로 디자인 토큰 추가
+  - [x] colors: primary(#000), secondary(#006b5f), surface/on-surface 계열, error 등
+  - [x] fontFamily: Inter (`--font-sans: var(--font-inter), ...`)
+  - [x] spacing: timeline-slot(64px), container-padding(24px), gutter(16px) 등
+  - [x] borderRadius: sm(0.25rem), md(0.75rem), lg(1rem), xl(1.5rem)
+- [x] `app/layout.tsx` — `next/font/google`으로 Inter 폰트 적용, body에 `bg-background text-on-surface`
+- [x] 환경변수 설정 (`.env.local`) — `NEXT_PUBLIC_API_URL=http://localhost:8080` 추가
 - [ ] Axios 인스턴스 및 인터셉터 설정 (`services/api.ts`)
   - [ ] baseURL, Authorization 헤더 자동 주입
   - [ ] 401 시 refresh 토큰으로 재발급 인터셉터
@@ -84,10 +85,12 @@
 - [ ] `types/auth.ts`
   - `interface SignUpRequest` — name, email, password, phone?, birthDate?, gender?
   - `interface LoginRequest` — email, password
-  - `interface AuthResponse` — accessToken, refreshToken, user
+  - `interface AuthResponse` — accessToken, refreshToken, user, isProfileComplete?
   - `interface RefreshRequest` — refreshToken
+  - `interface GoogleLoginRequest` — idToken
+  - `interface CompleteProfileRequest` — phone, gender, birthday, 약관 동의
   - `type Gender = 'male' | 'female' | 'other'`
-- [ ] `services/authService.ts` — signUp(), login(), refresh()
+- [ ] `services/authService.ts` — signUp(), login(), refresh(), googleLogin(), completeProfile()
 - [ ] `stores/authStore.ts` — Zustand: user, accessToken, 로그아웃
 - [ ] `components/common/PasswordInput.tsx` — 보이기/숨기기 토글
 - [ ] `components/feature/GenderRadioGroup.tsx` — peer-checked 스타일
