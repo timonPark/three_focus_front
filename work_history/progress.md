@@ -159,11 +159,17 @@
 
 읽기 전용 뷰 (schedule + top3 데이터 합성)
 
-- [ ] `components/feature/Top3Summary.tsx` — 좌측: 완료/진행중/예정 상태 카드 (펄스 애니메이션)
-- [ ] `components/feature/DailyStats.tsx` — 달성률 % 박스
-- [ ] `components/feature/TimelineView.tsx` — 우측: 완료(bg-secondary-fixed) / 진행중(border-secondary) / 예정 색상 구분
-- [ ] `components/feature/DatePicker.tsx` — 좌/우 화살표 날짜 네비게이션
-- [ ] `app/(main)/visualization/page.tsx`
+- [x] `lib/utils.ts` — formatDateLabel 유틸 추가
+- [x] `components/feature/schedule/CurrentTimeIndicator.tsx` — offsetClass prop 추가 (재사용성)
+- [x] `components/feature/visualization/Top3SummaryCard.tsx` — completed/active/pending 3상태 카드
+- [x] `components/feature/visualization/StatsBox.tsx` — 달성률 % (bg-primary-container 다크 박스)
+- [x] `components/feature/visualization/VisualizationBlock.tsx` — 상태별 색상 블록 (read-only)
+- [x] `components/feature/visualization/VisualizationTimeline.tsx` — 05:00~22:00 읽기 전용 타임라인
+- [x] `app/(main)/visualization/page.tsx`
+  - [x] 날짜 좌우 네비게이션 (ChevronLeft/Right)
+  - [x] 좌측: Top3SummaryCard × 3 + StatsBox(달성률)
+  - [x] 우측: VisualizationTimeline (상태별 블록, 오늘일 때만 현재시간 표시)
+  - [x] 공유 버튼 → /share
 
 ---
 

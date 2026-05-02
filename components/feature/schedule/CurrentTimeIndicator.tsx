@@ -5,7 +5,11 @@ import { useEffect, useState } from 'react'
 const TIMELINE_START_HOUR = 5
 const SLOT_HEIGHT = 64
 
-export default function CurrentTimeIndicator() {
+interface Props {
+  offsetClass?: string
+}
+
+export default function CurrentTimeIndicator({ offsetClass = 'left-16' }: Props) {
   const [top, setTop] = useState<number | null>(null)
   const [label, setLabel] = useState('')
 
@@ -28,7 +32,7 @@ export default function CurrentTimeIndicator() {
 
   return (
     <div
-      className="absolute left-16 right-0 flex items-center z-20 pointer-events-none"
+      className={`absolute ${offsetClass} right-0 flex items-center z-20 pointer-events-none`}
       style={{ top: `${top}px` }}
     >
       <div className="w-2 h-2 rounded-full bg-error -ml-1 shrink-0" />

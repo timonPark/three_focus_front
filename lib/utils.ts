@@ -17,6 +17,13 @@ export function addMinutesToTime(time: string, minutes: number): string {
   return `${String(endH).padStart(2, '0')}:${String(endM).padStart(2, '0')}`
 }
 
+export function formatDateLabel(date: Date): string {
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  const weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일']
+  return `${month}월 ${day}일 ${weekdays[date.getDay()]}`
+}
+
 export function formatTimeRange(start: string, end: string): string {
   const fmt = (t: string) => {
     const [h, m] = t.split(':').map(Number)
