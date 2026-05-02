@@ -135,22 +135,23 @@
 
 ### Phase 5 — 시간 배치 (`/schedule`)
 
-**추가 설치 필요:** `@dnd-kit/core`, `@dnd-kit/sortable`
-
-- [ ] `types/schedule.ts`
+- [x] `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities` 설치
+- [x] `types/schedule.ts`
   - `interface ScheduleResponse` — id, todoId, date, startTime, endTime
   - `interface UpsertScheduleRequest` — todoId, date, startTime, endTime
-- [ ] `services/scheduleService.ts` — getSchedules(date), upsertSchedule(), deleteSchedule()
-- [ ] `hooks/useSchedule.ts`
-- [ ] `components/feature/DraggableTodoCard.tsx` — 좌측 패널 드래그 소스 (cursor-grab)
-- [ ] `components/feature/TimelineGrid.tsx` — 우측 시간대 그리드 (h-[64px]/시간)
-- [ ] `components/feature/TimelineSlot.tsx` — 드롭 타겟 슬롯
-- [ ] `components/feature/ScheduledBlock.tsx` — 배치된 과업 블록 (border-l-4 border-secondary)
-- [ ] `components/feature/CurrentTimeIndicator.tsx` — 빨간 현재 시간 선
-- [ ] `app/(main)/schedule/page.tsx`
-  - [ ] 좌측: 핵심 3가지 드래그 카드 + 미배치 배지
-  - [ ] 우측: 드롭 가능한 타임라인
-  - [ ] 초기화 / 하루 일정 확정 버튼
+- [x] `services/schedule.ts` — getSchedules(date), upsertSchedule(), deleteSchedule()
+- [x] `hooks/useSchedule.ts` — useSchedules, useUpsertSchedule, useDeleteSchedule
+- [x] `lib/utils.ts` — addMinutesToTime, formatTimeRange 유틸 추가
+- [x] `components/feature/schedule/DraggableTaskCard.tsx` — useDraggable, cursor-grab, 시간/미배치 배지
+- [x] `components/feature/schedule/TimelineSlot.tsx` — useDroppable, 드롭 강조(isOver)
+- [x] `components/feature/schedule/ScheduledBlock.tsx` — border-l-4 border-secondary, 제거 버튼
+- [x] `components/feature/schedule/CurrentTimeIndicator.tsx` — 빨간 현재 시간 선 (1분 갱신)
+- [x] `components/feature/schedule/TimelineGrid.tsx` — 05:00~22:00 슬롯, 600px 스크롤
+- [x] `app/(main)/schedule/page.tsx`
+  - [x] DndContext onDragEnd → upsertSchedule (startTime=슬롯시각, endTime=+estimatedMinutes)
+  - [x] 좌측: 핵심 3가지 DraggableTaskCard + 빈 상태 처리
+  - [x] 우측: TimelineGrid (droppable 슬롯, ScheduledBlock)
+  - [x] 초기화(전체 삭제) / 하루 일정 확정(→ /visualization) 버튼
 
 ---
 
