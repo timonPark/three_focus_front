@@ -118,17 +118,18 @@
 
 ### Phase 4 — 핵심 3가지 선택 (`/top3`)
 
-- [ ] `types/top3.ts`
+- [x] `types/top3.ts`
   - `interface Top3Response` — id, todoId, date, order
   - `interface SetTop3Request` — todoIds: number[]
-- [ ] `services/top3Service.ts` — getTop3(date), setTop3()
-- [ ] `hooks/useTop3.ts`
-- [ ] `components/feature/Top3Card.tsx` — 선택/미선택 상태, border-secondary, 별 아이콘
-- [ ] `components/feature/Top3Grid.tsx` — bento grid (grid-cols-3)
-- [ ] `components/feature/Top3ProgressBar.tsx` — "2/3 선택됨" sticky 진행상황
-- [ ] `app/(main)/top3/page.tsx`
-  - [ ] 선택된 todoId 배열 Zustand 관리
-  - [ ] 3개 선택 시 "시간 배치" 버튼 활성화 → /schedule 이동
+- [x] `services/top3Service.ts` — getTop3(date), setTop3()
+- [x] `hooks/useTop3.ts`
+- [x] `components/feature/top3/Top3Card.tsx` — 선택/미선택 상태, border-secondary, 별 아이콘, order 배지
+- [x] `components/feature/top3/Top3ProgressBar.tsx` — "N/3 선택됨" sticky 진행상황, 시간 배치 버튼
+- [x] `app/(main)/top3/page.tsx`
+  - [x] 기존 top3 데이터로 selectedIds 초기화 (useEffect)
+  - [x] 최대 3개 선택 제한 handleToggle
+  - [x] 3개 선택 시 "시간 배치" 버튼 활성화 → setTop3.mutateAsync → /schedule 이동
+  - [x] 반응형 bento grid (grid-cols-1/2/3)
 
 ---
 
