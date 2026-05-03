@@ -1,19 +1,22 @@
 import CurrentTimeIndicator from '../schedule/CurrentTimeIndicator'
 import VisualizationBlock from './VisualizationBlock'
 import type { TaskStatus } from './Top3SummaryCard'
-import type { ScheduleResponse } from '@/types/schedule'
+import type { DailyScheduleItemResponse } from '@/types/schedule'
 import type { TodoResponse } from '@/types/todo'
 import type { Top3Response } from '@/types/top3'
+import { addMinutesToTime } from '@/lib/utils'
 
 const HOURS = Array.from({ length: 18 }, (_, i) => `${String(i + 5).padStart(2, '0')}:00`)
 
-function getTaskStatus(todo: TodoResponse, schedule: ScheduleResponse, isToday: boolean): TaskStatus {
+function getTaskStatus(todo: TodoResponse, schedule: DailyScheduleItemResponse, isToday: boolean): TaskStatus {
   if (todo.completed) return 'completed'
-  if (!isToday) return 'pending'
+  if (!isToday || !schedule.startTime) return 'pending'
   const now = new Date()
   const curr = now.getHours() * 60 + now.getMinutes()
-  const [sh, sm] = schedule.startTime.split(':').map(Number)
-  const [eh, em] = schedule.endTime.split(':').map(Number)
+  const startTime = schedule.startTime
+  const endTime = schedule.endTime ?? addMinutesToTime(startTime, 60)
+  const [sh, sm] = startTime.split(':').map(Number)
+  const [eh, em] = endTime.split(':').map(Number)
   if (curr >= sh * 60 + sm && curr < eh * 60 + em) return 'active'
   return 'pending'
 }
@@ -26,7 +29,7 @@ function formatHourLabel(hour: string): string {
 }
 
 interface Props {
-  schedules: ScheduleResponse[]
+  schedules: DailyScheduleItemResponse[]
   todos: TodoResponse[]
   top3Data: Top3Response[]
   isToday: boolean
@@ -42,7 +45,7 @@ export default function VisualizationTimeline({ schedules, todos, top3Data, isTo
       </div>
       <div className="relative h-[600px] overflow-y-auto scrollbar-hide p-6">
         {HOURS.map((hour) => {
-          const schedule = schedules.find((s) => s.startTime.slice(0, 2) === hour.slice(0, 2))
+          const schedule = schedules.find((s) => s.startTime && s.startTime.slice(0, 2) === hour.slice(0, 2))
           const todo = schedule ? todos.find((t) => t.id === schedule.todoId) : undefined
           const order = schedule ? (top3OrderMap.get(schedule.todoId) ?? 0) : 0
           const status = schedule && todo ? getTaskStatus(todo, schedule, isToday) : undefined
@@ -57,8 +60,8 @@ export default function VisualizationTimeline({ schedules, todos, top3Data, isTo
                   <VisualizationBlock
                     title={todo.title}
                     order={order}
-                    startTime={schedule.startTime}
-                    endTime={schedule.endTime}
+                    startTime={schedule.startTime ?? '00:00'}
+                    endTime={schedule.endTime ?? addMinutesToTime(schedule.startTime ?? '00:00', 60)}
                     status={status}
                   />
                 )}

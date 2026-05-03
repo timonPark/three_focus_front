@@ -1,12 +1,12 @@
 import { CheckCircle, Clock } from 'lucide-react'
 import type { TodoResponse } from '@/types/todo'
-import type { ScheduleResponse } from '@/types/schedule'
+import type { DailyScheduleItemResponse } from '@/types/schedule'
 
 export type TaskStatus = 'completed' | 'active' | 'pending'
 
 interface Props {
   todo: TodoResponse
-  schedule?: ScheduleResponse
+  schedule?: DailyScheduleItemResponse
   order: number
   status: TaskStatus
 }
@@ -35,7 +35,7 @@ export default function Top3SummaryCard({ todo, schedule, order, status }: Props
       {schedule && (
         <div className="flex items-center gap-1.5 mt-2 text-on-surface-variant">
           <Clock size={12} />
-          <span className="text-xs">{schedule.startTime} - {schedule.endTime}</span>
+          <span className="text-xs">{schedule.startTime}{schedule.endTime ? ` - ${schedule.endTime}` : ''}</span>
         </div>
       )}
     </div>

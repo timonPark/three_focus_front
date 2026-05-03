@@ -1,16 +1,20 @@
 import { X } from 'lucide-react'
 import type { TodoResponse } from '@/types/todo'
-import type { ScheduleResponse } from '@/types/schedule'
+import type { DailyScheduleItemResponse } from '@/types/schedule'
+import { addMinutesToTime } from '@/lib/utils'
 
 interface Props {
   todo: TodoResponse
-  schedule: ScheduleResponse
+  schedule: DailyScheduleItemResponse
   onRemove: () => void
 }
 
 export default function ScheduledBlock({ todo, schedule, onRemove }: Props) {
-  const [sh, sm] = schedule.startTime.split(':').map(Number)
-  const [eh, em] = schedule.endTime.split(':').map(Number)
+  const startTime = schedule.startTime ?? '00:00'
+  const endTime = schedule.endTime ?? addMinutesToTime(startTime, todo.estimatedMinutes ?? 60)
+
+  const [sh, sm] = startTime.split(':').map(Number)
+  const [eh, em] = endTime.split(':').map(Number)
   const durationMinutes = eh * 60 + em - (sh * 60 + sm)
   const heightPx = Math.max(56, (durationMinutes / 60) * 64)
 
@@ -29,7 +33,7 @@ export default function ScheduledBlock({ todo, schedule, onRemove }: Props) {
         </button>
       </div>
       <span className="text-xs text-on-surface-variant">
-        {schedule.startTime} - {schedule.endTime}
+        {startTime} - {endTime}
       </span>
     </div>
   )

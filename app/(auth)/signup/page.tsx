@@ -12,16 +12,14 @@ import Button from '@/components/common/Button'
 import GenderRadioGroup from '@/components/feature/auth/GenderRadioGroup'
 import TermsAgreement from '@/components/feature/auth/TermsAgreement'
 import { authService } from '@/services/authService'
-import { useAuthStore } from '@/stores/authStore'
-import { setAuthCookie } from '@/lib/actions/auth'
 
 const schema = z.object({
   name: z.string().min(1, '이름을 입력해주세요'),
   email: z.string().email('올바른 이메일 주소를 입력해주세요'),
   password: z.string().min(8, '비밀번호는 8자 이상이어야 합니다'),
-  phone: z.string().optional(),
-  birthDate: z.string().optional(),
-  gender: z.enum(['male', 'female']).optional(),
+  phone: z.string().min(1, '전화번호를 입력해주세요'),
+  birthday: z.string().min(1, '생년월일을 입력해주세요'),
+  gender: z.enum(['MALE', 'FEMALE'], { message: '성별을 선택해주세요' }),
   termsService: z.boolean().refine((v) => v === true, '서비스 이용약관에 동의해주세요'),
   termsPrivacy: z.boolean().refine((v) => v === true, '개인정보 처리방침에 동의해주세요'),
   termsMarketing: z.boolean().optional(),
@@ -31,7 +29,6 @@ type FormData = z.infer<typeof schema>
 
 export default function SignupPage() {
   const router = useRouter()
-  const setAuth = useAuthStore((s) => s.setAuth)
 
   const methods = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -47,10 +44,20 @@ export default function SignupPage() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const result = await authService.signUp(data)
-      setAuth(result.accessToken, result.refreshToken, result.user)
-      await setAuthCookie(result.accessToken)
-      router.push('/home')
+      await authService.signUp({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        phone: data.phone,
+        birthday: data.birthday,
+        gender: data.gender,
+        termAgreements: [
+          { termType: 'SERVICE_TERMS', agreed: data.termsService },
+          { termType: 'PRIVACY_POLICY', agreed: data.termsPrivacy },
+          { termType: 'MARKETING', agreed: data.termsMarketing ?? false },
+        ],
+      })
+      router.push('/login')
     } catch (err: any) {
       const msg = err?.response?.data?.message ?? '회원가입에 실패했습니다. 다시 시도해주세요.'
       setError('root', { message: msg })
@@ -126,6 +133,7 @@ export default function SignupPage() {
                     label="전화번호"
                     type="tel"
                     placeholder="010-0000-0000"
+                    error={errors.phone?.message}
                     {...register('phone')}
                   />
                 </div>
@@ -133,11 +141,12 @@ export default function SignupPage() {
                   <Input
                     label="생년월일"
                     type="date"
-                    {...register('birthDate')}
+                    error={errors.birthday?.message}
+                    {...register('birthday')}
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <GenderRadioGroup register={register} name="gender" />
+                  <GenderRadioGroup register={register} name="gender" error={errors.gender?.message} />
                 </div>
               </div>
 

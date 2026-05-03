@@ -7,4 +7,5 @@ export interface Top3Response {
 
 export interface SetTop3Request {
   todoIds: number[]
+  date: string
 }

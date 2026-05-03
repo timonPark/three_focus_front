@@ -9,7 +9,7 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
+    async jwt({ token, account, profile }) {
       if (account?.provider === 'google' && account.id_token) {
         try {
           const res = await fetch(
@@ -25,7 +25,19 @@ const handler = NextAuth({
             token.accessToken = data.accessToken
             token.refreshToken = data.refreshToken
             token.isProfileComplete = data.isProfileComplete
-            token.backendUser = data.user
+            if (data.user) {
+              token.backendUser = data.user
+            } else {
+              // 백엔드가 user를 반환하지 않을 때 JWT payload + Google 프로필로 구성
+              const payload = JSON.parse(
+                Buffer.from(data.accessToken.split('.')[1], 'base64url').toString()
+              )
+              token.backendUser = {
+                id: Number(payload.sub),
+                name: (profile as any)?.name ?? token.name ?? '',
+                email: (profile as any)?.email ?? token.email ?? '',
+              }
+            }
           }
         } catch {
           // 백엔드 연결 실패 시 클라이언트에서 처리

@@ -96,7 +96,9 @@
 - [x] `app/(auth)/signup/page.tsx` — 전체 폼 + 약관 동의 섹션 (React Hook Form + Zod v4)
 - [x] `app/google-callback/page.tsx` — Google 토큰 교환 후 쿠키 설정 + 리다이렉트
 - [x] `middleware.ts` → `proxy.ts` 마이그레이션 (deprecated 해소), PUBLIC_PATHS에 /google-callback, /share 추가
-- [ ] 소셜 가입 추가정보 입력 플로우 (`/complete-profile`) — isProfileComplete: false 시 사용
+- [x] 소셜 가입 추가정보 입력 플로우 (`/complete-profile`) — isProfileComplete: false 시 phone/birthday/gender/약관 입력
+- [x] Google OAuth JWT 콜백에서 백엔드 user 미반환 시 JWT payload + Google 프로필로 user 구성
+- [x] 로그인 페이지 `google-auth-failed` 에러 파라미터 처리 (에러 배너 표시)
 
 ---
 
@@ -111,7 +113,7 @@
 - [x] `stores/todoStore.ts` — quickAddValue UI 상태
 - [x] `components/feature/todo/TodoItem.tsx` — 체크박스, top3 배지, 인라인 편집, edit/delete hover
 - [x] `components/feature/todo/TodoList.tsx` — 진행중/완료 섹션 분리
-- [x] `components/feature/todo/QuickAddInput.tsx` — Enter로 할 일 추가
+- [x] `components/feature/todo/QuickAddInput.tsx` — Enter로 할 일 추가 (한국어 IME isComposing 처리)
 - [x] `app/(main)/home/page.tsx` — 오늘 날짜 CRUD + 핵심 3가지 프롬프트 박스
 
 ---
@@ -120,7 +122,7 @@
 
 - [x] `types/top3.ts`
   - `interface Top3Response` — id, todoId, date, order
-  - `interface SetTop3Request` — todoIds: number[]
+  - `interface SetTop3Request` — todoIds: number[], date: string
 - [x] `services/top3Service.ts` — getTop3(date), setTop3()
 - [x] `hooks/useTop3.ts`
 - [x] `components/feature/top3/Top3Card.tsx` — 선택/미선택 상태, border-secondary, 별 아이콘, order 배지

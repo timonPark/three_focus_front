@@ -4,12 +4,12 @@ import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 import { GripVertical, Timer } from 'lucide-react'
 import type { TodoResponse } from '@/types/todo'
-import type { ScheduleResponse } from '@/types/schedule'
+import type { DailyScheduleItemResponse } from '@/types/schedule'
 import { formatMinutes, formatTimeRange } from '@/lib/utils'
 
 interface Props {
   todo: TodoResponse
-  schedule?: ScheduleResponse
+  schedule?: DailyScheduleItemResponse
   order: number
 }
 
@@ -20,6 +20,12 @@ export default function DraggableTaskCard({ todo, schedule, order }: Props) {
   })
 
   const style = transform ? { transform: CSS.Translate.toString(transform) } : undefined
+
+  const timeLabel = schedule?.startTime
+    ? schedule.endTime
+      ? formatTimeRange(schedule.startTime, schedule.endTime)
+      : schedule.startTime
+    : '미배치'
 
   return (
     <div
@@ -34,7 +40,7 @@ export default function DraggableTaskCard({ todo, schedule, order }: Props) {
           className={`px-2 py-1 rounded-full text-xs font-semibold
             ${schedule ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-container-highest text-on-surface-variant'}`}
         >
-          {schedule ? formatTimeRange(schedule.startTime, schedule.endTime) : '미배치'}
+          {timeLabel}
         </span>
         <div
           {...listeners}

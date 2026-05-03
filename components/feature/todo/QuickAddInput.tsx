@@ -12,7 +12,7 @@ export default function QuickAddInput({ onAdd, disabled }: QuickAddInputProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== 'Enter') return
+    if (e.key !== 'Enter' || e.nativeEvent.isComposing) return
     const value = inputRef.current?.value.trim()
     if (!value) return
     onAdd(value)

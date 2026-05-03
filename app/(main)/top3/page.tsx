@@ -38,7 +38,7 @@ export default function Top3Page() {
   }
 
   const handleProceed = async () => {
-    await setTop3.mutateAsync({ todoIds: selectedIds })
+    await setTop3.mutateAsync({ todoIds: selectedIds, date: today })
     router.push('/schedule')
   }
 

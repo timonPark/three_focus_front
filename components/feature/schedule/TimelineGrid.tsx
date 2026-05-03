@@ -1,13 +1,13 @@
 import TimelineSlot from './TimelineSlot'
 import ScheduledBlock from './ScheduledBlock'
 import CurrentTimeIndicator from './CurrentTimeIndicator'
-import type { ScheduleResponse } from '@/types/schedule'
+import type { DailyScheduleItemResponse } from '@/types/schedule'
 import type { TodoResponse } from '@/types/todo'
 
 const HOURS = Array.from({ length: 18 }, (_, i) => `${String(i + 5).padStart(2, '0')}:00`)
 
 interface Props {
-  schedules: ScheduleResponse[]
+  schedules: DailyScheduleItemResponse[]
   todos: TodoResponse[]
   onRemoveSchedule: (todoId: number) => void
 }
@@ -18,7 +18,7 @@ export default function TimelineGrid({ schedules, todos, onRemoveSchedule }: Pro
       <h2 className="text-xl font-semibold text-on-surface mb-4">오늘의 타임라인</h2>
       <div className="h-[600px] overflow-y-auto pr-2 scrollbar-hide relative">
         {HOURS.map((hour) => {
-          const schedule = schedules.find((s) => s.startTime.slice(0, 2) === hour.slice(0, 2))
+          const schedule = schedules.find((s) => s.startTime && s.startTime.slice(0, 2) === hour.slice(0, 2))
           const todo = schedule ? todos.find((t) => t.id === schedule.todoId) : undefined
 
           return (

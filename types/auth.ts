@@ -3,16 +3,19 @@ export interface LoginRequest {
   password: string
 }
 
+export interface TermAgreementRequest {
+  termType: 'SERVICE_TERMS' | 'PRIVACY_POLICY' | 'MARKETING'
+  agreed: boolean
+}
+
 export interface SignUpRequest {
   name: string
   email: string
   password: string
-  phone?: string
-  birthDate?: string
-  gender?: Gender
-  termsService: boolean
-  termsPrivacy: boolean
-  termsMarketing?: boolean
+  phone: string
+  birthday: string
+  gender: Gender
+  termAgreements: TermAgreementRequest[]
 }
 
 export interface GoogleLoginRequest {
@@ -20,12 +23,10 @@ export interface GoogleLoginRequest {
 }
 
 export interface CompleteProfileRequest {
-  phone?: string
-  gender?: Gender
-  birthDate?: string
-  termsService: boolean
-  termsPrivacy: boolean
-  termsMarketing?: boolean
+  phone: string
+  birthday: string
+  gender: Gender
+  termAgreements: TermAgreementRequest[]
 }
 
 export interface RefreshRequest {
@@ -35,7 +36,7 @@ export interface RefreshRequest {
 export interface AuthResponse {
   accessToken: string
   refreshToken: string
-  user: User
+  user?: User
   isProfileComplete?: boolean
 }
 
@@ -43,9 +44,15 @@ export interface RefreshResponse {
   accessToken: string
 }
 
-export type Gender = 'male' | 'female'
+export type Gender = 'MALE' | 'FEMALE'
 
 export type User = {
+  id: number
+  name: string
+  email: string
+}
+
+export interface UserResponse {
   id: number
   name: string
   email: string

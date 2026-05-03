@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import Input from '@/components/common/Input'
@@ -22,6 +22,8 @@ type FormData = z.infer<typeof schema>
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const googleError = searchParams.get('error') === 'google-auth-failed'
   const setAuth = useAuthStore((s) => s.setAuth)
 
   const {
@@ -34,7 +36,7 @@ export default function LoginPage() {
   const onSubmit = async (data: FormData) => {
     try {
       const result = await authService.login(data)
-      setAuth(result.accessToken, result.refreshToken, result.user)
+      setAuth(result.accessToken, result.refreshToken, result.user ?? null)
       await setAuthCookie(result.accessToken)
       router.push('/home')
     } catch {
@@ -71,6 +73,12 @@ export default function LoginPage() {
           <h1 className="text-3xl font-semibold text-on-surface">로그인</h1>
           <p className="text-sm text-on-surface-variant mt-1">집중의 시간을 찾기 위해 로그인하세요.</p>
         </div>
+
+        {googleError && (
+          <div className="mb-4 p-3 rounded-lg bg-error-container text-on-error-container text-sm text-center">
+            구글 로그인에 실패했습니다. 다시 시도해주세요.
+          </div>
+        )}
 
         <button
           onClick={handleGoogleLogin}

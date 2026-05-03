@@ -11,7 +11,7 @@ type AuthStore = {
   accessToken: string | null
   refreshToken: string | null
   user: User | null
-  setAuth: (accessToken: string, refreshToken: string, user: User) => void
+  setAuth: (accessToken: string, refreshToken: string, user: User | null) => void
   setAccessToken: (accessToken: string) => void
   clearAuth: () => void
 }

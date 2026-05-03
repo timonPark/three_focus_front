@@ -11,16 +11,18 @@ import StatsBox from '@/components/feature/visualization/StatsBox'
 import VisualizationTimeline from '@/components/feature/visualization/VisualizationTimeline'
 import type { TaskStatus } from '@/components/feature/visualization/Top3SummaryCard'
 import type { TodoResponse } from '@/types/todo'
-import type { ScheduleResponse } from '@/types/schedule'
-import { toDateString, formatDateLabel } from '@/lib/utils'
+import type { DailyScheduleItemResponse } from '@/types/schedule'
+import { toDateString, formatDateLabel, addMinutesToTime } from '@/lib/utils'
 
-function getTaskStatus(todo: TodoResponse, schedule: ScheduleResponse | undefined, isToday: boolean): TaskStatus {
+function getTaskStatus(todo: TodoResponse, schedule: DailyScheduleItemResponse | undefined, isToday: boolean): TaskStatus {
   if (todo.completed) return 'completed'
-  if (!schedule || !isToday) return 'pending'
+  if (!schedule || !schedule.startTime || !isToday) return 'pending'
   const now = new Date()
   const curr = now.getHours() * 60 + now.getMinutes()
-  const [sh, sm] = schedule.startTime.split(':').map(Number)
-  const [eh, em] = schedule.endTime.split(':').map(Number)
+  const startTime = schedule.startTime
+  const endTime = schedule.endTime ?? addMinutesToTime(startTime, 60)
+  const [sh, sm] = startTime.split(':').map(Number)
+  const [eh, em] = endTime.split(':').map(Number)
   if (curr >= sh * 60 + sm && curr < eh * 60 + em) return 'active'
   return 'pending'
 }

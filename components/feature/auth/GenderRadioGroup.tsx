@@ -1,8 +1,8 @@
 import { UseFormRegister } from 'react-hook-form'
 
 const GENDER_OPTIONS = [
-  { value: 'male', label: '남성' },
-  { value: 'female', label: '여성' },
+  { value: 'MALE', label: '남성' },
+  { value: 'FEMALE', label: '여성' },
 ] as const
 
 interface GenderRadioGroupProps {
