@@ -188,17 +188,22 @@
 
 ---
 
-### Phase 7 — 일정 공유 (`/share`)
+### Phase 7 — 일정 공유 (`/share`) (2026-05-04)
 
-- [ ] `types/share.ts`
-  - `interface ShareResponse` — shareToken, shareUrl, expiresAt, todos: TodoResponse[]
-  - `interface CreateShareRequest` — includeDetails, includeStatus, isPrivate
-- [ ] `services/shareService.ts` — createShare(), getShare(token)
-- [ ] `components/feature/ShareCard.tsx` — 공유 미리보기 카드 (이미지 저장 대상)
-- [ ] `components/feature/ShareOptions.tsx` — 체크박스 3개 (과업 상세/완료상태/비공개)
-- [ ] `components/feature/ShareActions.tsx` — 링크 복사, 이미지 저장 버튼
-- [ ] `app/(main)/share/page.tsx`
-- [ ] `app/share/[token]/page.tsx` — 인증 불필요 (middleware.ts 예외 추가)
+- [x] `html-to-image` 패키지 설치 (이미지 저장용)
+- [x] `types/share.ts`
+  - `interface ShareResponse` — shareToken, shareUrl, expiresAt, date, todos, includeDetails, includeStatus, isPrivate
+  - `interface CreateShareRequest` — date, includeDetails, includeStatus, isPrivate
+- [x] `services/shareService.ts` — createShare(), getShare(token)
+- [x] `hooks/useShare.ts` — useCreateShare, useGetShare
+- [x] `components/feature/share/ShareCard.tsx` — 공유 미리보기 카드 (이미지 저장 대상, 완료 상태/상세/번호 조건부 렌더)
+- [x] `components/feature/share/ShareOptions.tsx` — 토글 스위치 3개 (과업 상세/완료상태/비공개)
+- [x] `components/feature/share/ShareActions.tsx` — 링크 생성&복사, html-to-image PNG 저장 버튼
+- [x] `app/(main)/share/page.tsx`
+  - [x] 날짜 네비게이션 (top3 과업만 표시)
+  - [x] 실시간 미리보기 (옵션 변경 즉시 반영)
+  - [x] 링크 생성 시 자동 클립보드 복사
+- [x] `app/share/[token]/page.tsx` — 인증 불필요 (middleware.ts `/share` 예외 처리됨)
 
 ---
 
