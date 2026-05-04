@@ -50,8 +50,9 @@ export default function SharePage() {
       date: dateStr,
       ...options,
     })
-    setShareUrl(result.shareUrl)
-    await navigator.clipboard.writeText(result.shareUrl)
+    const frontendUrl = `${window.location.origin}/share/${result.shareToken}`
+    setShareUrl(frontendUrl)
+    await navigator.clipboard.writeText(frontendUrl)
   }
 
   return (

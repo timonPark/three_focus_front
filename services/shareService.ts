@@ -1,4 +1,4 @@
-import api from './api'
+import api, { publicApi } from './api'
 import type { ShareResponse, CreateShareRequest } from '@/types/share'
 
 export const shareService = {
@@ -6,5 +6,5 @@ export const shareService = {
     api.post<ShareResponse>('/api/shares', data).then((r) => r.data),
 
   getShare: (token: string) =>
-    api.get<ShareResponse>(`/api/shares/${token}`).then((r) => r.data),
+    publicApi.get<ShareResponse>(`/api/shares/${token}`).then((r) => r.data),
 }

@@ -44,3 +44,7 @@ api.interceptors.response.use(
 )
 
 export default api
+
+export const publicApi = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+})

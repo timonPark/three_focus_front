@@ -1,4 +1,6 @@
 import type { TodoResponse } from './todo'
+import type { ScheduleResponse } from './schedule'
+import type { Top3Response } from './top3'
 
 export interface ShareResponse {
   shareToken: string
@@ -6,6 +8,8 @@ export interface ShareResponse {
   expiresAt: string
   date: string
   todos: TodoResponse[]
+  schedules?: ScheduleResponse[]
+  top3Data?: Top3Response[]
   includeDetails: boolean
   includeStatus: boolean
   isPrivate: boolean

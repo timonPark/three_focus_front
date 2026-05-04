@@ -12,6 +12,7 @@ import Button from '@/components/common/Button'
 import GenderRadioGroup from '@/components/feature/auth/GenderRadioGroup'
 import TermsAgreement from '@/components/feature/auth/TermsAgreement'
 import { authService } from '@/services/authService'
+import { useAuthStore } from '@/stores/authStore'
 
 const schema = z.object({
   name: z.string().min(1, '이름을 입력해주세요'),
@@ -29,6 +30,7 @@ type FormData = z.infer<typeof schema>
 
 export default function SignupPage() {
   const router = useRouter()
+  const setAuth = useAuthStore((s) => s.setAuth)
 
   const methods = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -44,7 +46,7 @@ export default function SignupPage() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      await authService.signUp({
+      const result = await authService.signUp({
         name: data.name,
         email: data.email,
         password: data.password,
@@ -57,7 +59,8 @@ export default function SignupPage() {
           { termType: 'MARKETING', agreed: data.termsMarketing ?? false },
         ],
       })
-      router.push('/login')
+      setAuth(result.accessToken, result.refreshToken, result.user ?? null)
+      router.push(result.isProfileComplete === false ? '/complete-profile' : '/home')
     } catch (err: any) {
       const msg = err?.response?.data?.message ?? '회원가입에 실패했습니다. 다시 시도해주세요.'
       setError('root', { message: msg })

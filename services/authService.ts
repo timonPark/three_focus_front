@@ -15,7 +15,7 @@ export const authService = {
     api.post<AuthResponse>('/api/auth/login', data).then((r) => r.data),
 
   signUp: (data: SignUpRequest) =>
-    api.post<void>('/api/auth/sign-up', data).then((r) => r.data),
+    api.post<AuthResponse>('/api/auth/sign-up', data).then((r) => r.data),
 
   refresh: (data: RefreshRequest) =>
     api.post<RefreshResponse>('/api/auth/refresh', data).then((r) => r.data),
