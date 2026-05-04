@@ -2,6 +2,22 @@ export function toDateString(date: Date = new Date()): string {
   return date.toISOString().split('T')[0]
 }
 
+export function parseTimeString(time: any): string {
+  if (!time) return '00:00'
+  if (Array.isArray(time)) {
+    const h = String(time[0]).padStart(2, '0')
+    const m = String(time[1] || 0).padStart(2, '0')
+    return `${h}:${m}`
+  }
+  if (typeof time === 'string') {
+    const parts = time.split(':')
+    const h = (parts[0] || '00').padStart(2, '0')
+    const m = (parts[1] || '00').padStart(2, '0')
+    return `${h}:${m}`
+  }
+  return '00:00'
+}
+
 export function formatMinutes(minutes: number): string {
   if (minutes < 60) return `${minutes}분`
   const h = Math.floor(minutes / 60)

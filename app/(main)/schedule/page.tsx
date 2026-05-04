@@ -47,6 +47,15 @@ export default function SchedulePage() {
     })
   }
 
+  const handleUpdateSchedule = (todoId: number, startTime: string, newEndTime: string) => {
+    upsertSchedule.mutate({
+      todoId,
+      date: today,
+      startTime,
+      endTime: newEndTime,
+    })
+  }
+
   const handleReset = () => {
     schedules.forEach((s) => deleteSchedule.mutate(s.todoId))
   }
@@ -115,6 +124,7 @@ export default function SchedulePage() {
                 schedules={schedules}
                 todos={todos}
                 onRemoveSchedule={(todoId) => deleteSchedule.mutate(todoId)}
+                onUpdateSchedule={handleUpdateSchedule}
               />
             </div>
           </div>

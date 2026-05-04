@@ -155,6 +155,19 @@
   - [x] 우측: TimelineGrid (droppable 슬롯, ScheduledBlock)
   - [x] 초기화(전체 삭제) / 하루 일정 확정(→ /visualization) 버튼
 
+#### 스케줄 블록 시간 조정 기능 (2026-05-04)
+
+- [x] `lib/utils.ts` — `parseTimeString` 유틸 추가 (배열/문자열 모두 파싱, 서버 응답 포맷 정규화)
+- [x] `components/feature/schedule/ScheduledBlock.tsx`
+  - [x] 호버 시 +/- 버튼 표시 (`group-hover:opacity-100`)
+  - [x] 30분 단위 증감, 최소 30분 / 최대 1440분 제한
+  - [x] `onUpdateDuration(newMinutes)` 콜백으로 상위에 전달
+- [x] `components/feature/schedule/TimelineGrid.tsx`
+  - [x] `onUpdateSchedule` prop 추가, `handleUpdateDuration` 핸들러 구현
+  - [x] `parseTimeString` 적용으로 시작 시간 슬롯 매칭 정확도 개선
+- [x] `app/(main)/schedule/page.tsx`
+  - [x] `handleUpdateSchedule` 추가 — 새 endTime 계산 후 `upsertSchedule` 호출
+
 ---
 
 ### Phase 6 — 일간 타임라인 (`/visualization`)
