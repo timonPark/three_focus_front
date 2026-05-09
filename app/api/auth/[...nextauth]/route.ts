@@ -13,7 +13,7 @@ const handler = NextAuth({
       if (account?.provider === 'google' && account.id_token) {
         try {
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`,
+            `${process.env.API_URL}/api/auth/google`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },

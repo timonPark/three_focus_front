@@ -207,6 +207,16 @@
 
 ---
 
+### CORS 해소 & API 환경 분리 (2026-05-09)
+
+- [x] `next.config.ts` — `rewrites` 추가: `/proxy/:path*` → `${API_URL}/:path*` (서버사이드 프록시)
+- [x] `services/api.ts` — `baseURL`을 `NEXT_PUBLIC_API_URL` → `'/proxy'` (브라우저가 동일 출처로 요청)
+- [x] `.env.local` — `NEXT_PUBLIC_API_URL` → `API_URL` 통일 (서버사이드 전용)
+- [x] `app/api/auth/[...nextauth]/route.ts` — 동일하게 `API_URL` 참조로 변경
+- 전환 방법: `.env.local`의 `API_URL` 한 줄만 변경 후 `pnpm dev` 재시작
+
+---
+
 ## 참고
 
 - 브랜치 네이밍: `feature/기능명` (예: `feature/login`)

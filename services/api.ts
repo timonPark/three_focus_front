@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useAuthStore } from '@/stores/authStore'
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: '/proxy',
 })
 
 api.interceptors.request.use((config) => {
@@ -46,5 +46,5 @@ api.interceptors.response.use(
 export default api
 
 export const publicApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: '/proxy',
 })
